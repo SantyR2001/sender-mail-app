@@ -1,12 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import { Button, Row, Col } from "react-bootstrap";
 import { GoMail } from 'react-icons/go'
 
 const App = () => {
-  const {email, setEmail} = React.useState('');
-  const {affair, setAffair} = React.useState('');
-  const {message, setMessage} = React.useState('');
+  const [email, setEmail] = useState('');
+  const [affair, setAffair] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleEmailChange = (event) => {
     const target = event.target;
@@ -27,10 +27,10 @@ const App = () => {
   const sendEmail = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('api url', {
-        email,
-        affair,
-        message
+      await axios.post('http://localhost:3000/send-email', {
+        email: email,
+        affair: affair,
+        message: message
       })
     } catch (error) {
       alert(error)
@@ -47,7 +47,7 @@ const App = () => {
           <div className="justify-content-center m-2">
           <h2> Enviador de mails <GoMail/></h2>
           <hr/>
-          <form className="form-inline">
+          <form onSubmit={sendEmail} className="form-inline">
             <div className="mt-1">
               <label>Email</label>
               <br/>
@@ -56,6 +56,7 @@ const App = () => {
                 className="form-control"
                 name="email"
                 onChange={handleEmailChange}
+                placeholder='EjemploCorreo@mail.com'
               />
             </div>
             <div className='mt-1'>
@@ -66,21 +67,24 @@ const App = () => {
                 className="form-control"
                 name="affair"
                 onChange={handleAffairChange}
+                placeholder='Coloca tu asunto aqui'
               />
             </div>
             <div className='mt-1'>
               <label>Mensaje</label>
               <br/>
               <textarea 
+                rows={4}
                 className="form-control"
                 name="message"
                 onChange={handleMessageChange}
+                placeholder='Escribe tu mensaje aqui'
               />
             </div>
             <Button
             type="submit"
             variant="success"
-            className="my-2" 
+            className="my-3" 
             style={{width: '100%'}}>     
               Enviar 
             </Button>
